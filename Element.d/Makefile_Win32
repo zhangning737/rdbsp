@@ -1,0 +1,54 @@
+
+#CXXFLAGS = -I../Math.d $(GFLAGS) -DF_NEEDS_UNDSC
+
+LIB = libele.lib
+
+OBJS = Coordset.obj Elemset.obj Element.obj \
+       AddElem.obj   \
+       Node.obj\
+       Press2force.obj \
+       Bricko.d/EightNodeBricko.obj\
+			Bricko.d/jacob.obj\
+			Bricko.d/inverse.obj\
+			Part.obj
+ 
+
+$(LIB): $(OBJS)
+	xilink /Lib /out:$(LIB) $(OBJS)
+
+
+Bricko.d/EightNodeBricko.obj:Bricko.d/EightNodeBricko.cpp Bricko.d/EightNodeBricko.h
+	cd Bricko.d
+	icl /debug /c EightNodeBricko.cpp
+	cd..
+
+Coordset.obj:Coordset.cpp Element.h
+	icl /debug /c Coordset.cpp
+
+Elemset.obj:Elemset.cpp Element.h
+	icl /debug /c Elemset.cpp
+
+Element.obj:Element.cpp Element.h
+	icl /debug /c Element.cpp
+
+AddElem.obj:AddElem.cpp Element.h Bricko.d/EightNodeBricko.h 
+	icl /debug /c AddElem.cpp
+
+Node.obj:Node.cpp Element.h
+	icl /debug /c Node.cpp
+
+Press2force.obj:Press2force.cpp Element.h
+	icl  /debug /c Press2force.cpp
+
+Bricko.d/jacob.obj:Bricko.d/jacob.cpp Bricko.d/jacob.h
+	cd Bricko.d
+	icl  /debug /c  jacob.cpp
+	cd..
+
+Bricko.d/inverse.obj:Bricko.d/inverse.cpp Bricko.d/inverse.h
+	cd Bricko.d
+	icl  /debug /c  inverse.cpp
+	cd..
+
+Part.obj:Part.cpp Part.h
+	icl  /debug /c Part.cpp

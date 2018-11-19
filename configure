@@ -1,0 +1,18 @@
+#!/bin/sh
+#find ./ -name "*.cpp" |awk -F "." '{print $2}'|xargs -i -t mv ./{}.cpp ./{}.C
+find ./ -name "*.cpp" |while read i
+do
+    echo "$i";
+    mv $i $(echo $i|sed s/cpp$/C/g);
+done
+rename tecio.lib tecio.bak
+rename tecio64.lib tecio64.bak
+rm -Rf *.obj *.lib
+cp -f defs_LINUX64 defs
+sed -i 's/resize_array.cpp/resize_array.C/' Utils.d/resize_array.h
+sed -i '4,5s/^\/\///' main.C
+sed -i '8,10s/^#/\/\/#/' main.C
+sed -i '21s/^#/\/\/#/' main.C
+sed -i '27,28s/^#/\/\/#/' main.C
+rename tecio.bak tecio.lib 
+rename tecio64.bak tecio64.lib

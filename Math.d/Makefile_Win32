@@ -1,0 +1,17 @@
+
+LIB = libmath.lib
+
+OBJS = egen.obj mathfem.obj
+
+
+libreg.lib:$(OBJS)
+	xilink /debug /Lib /out:$(LIB) $(OBJS)
+
+
+egen.obj:egen.cpp egen.h
+	icl /c /debug egen.cpp
+
+mathfem.obj:mathfem.cpp mathfem.h
+	icl /c /debug mathfem.cpp
+
+

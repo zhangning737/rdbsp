@@ -1,0 +1,27 @@
+
+LIB = $(LIBDIR)libparser.lib
+
+OBJS = lex.yy.obj y.tab.obj auxx.obj
+
+CC = $(CXX)
+
+CFLAGS = $(CXXFLAGS)
+
+$(LIBDIR)libparser.lib: $(OBJS)
+	link /lib /out:libparser.lib lex.yy.obj y.tab.obj auxx.obj
+
+y.tab.c: p.y
+	win_bison.exe -d -y -v -o y.tab.c p.y 
+
+lex.yy.c: lexer.l y.tab.obj
+	win_flex.exe  --wincompat  -l  -i lexer.l
+
+lex.yy.obj: lex.yy.c y.tab.h auxx.h
+	icl /debug /c /EHsc /Tp lex.yy.c
+
+y.tab.obj: y.tab.c auxx.h
+	icl /debug /c /Tp y.tab.c
+
+auxx.obj: auxx.cpp auxx.h ../Driver.d/Domain.h  ../Element.d/Element.h
+	icl /debug /c auxx.cpp
+
