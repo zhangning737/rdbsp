@@ -11,8 +11,6 @@ Matset::propadd(int num, int mtype, int nprops, double *p)
 
    switch(mtype) 
    {
-   case 8:
-       property = new (ba) Material_NULL(num,nprops,p);
      case 1:
        property = new (ba) Material_Ela(num,nprops, p);
        break;

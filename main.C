@@ -18,7 +18,7 @@
 
 Domain *domain = new Domain;
 
-extern int getopt(int argc, char *argv[], char *opstring);
+//extern int getopt(int argc, char *argv[], char *opstring);
 
 extern int yyparse(void);
 
