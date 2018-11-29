@@ -1,4 +1,3 @@
-
 ---
 title: 'Fidgit: An ungodly union of GitHub and figshare'
 tags:
