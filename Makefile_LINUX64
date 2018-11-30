@@ -17,8 +17,8 @@ LIBS = Parser.d/libparser.a\
 
 # Executables
 
-Drbsp: main.o $(LIBS) $(ADDLIBS)
-	$(CXX) -o Drbsp $(CXXFLAGS) main.o $(LIBS)
+rdbsp: main.o $(LIBS) $(ADDLIBS)
+	$(CXX) -o rdbsp $(CXXFLAGS) main.o $(LIBS)
 
 # command for creating the file basedir for a user
 Makefile::
@@ -26,11 +26,11 @@ Makefile::
 
 # command to make a compressed (gzip) tar file of the FEM code
 tarfile::
-	tar -cvf ../Drbsp.tar . ; gzip ../Drbsp.tar;
+	tar -cvf ../rdbsp.tar . ; gzip ../rdbsp.tar;
 
 	#echo Making miniFEM executable;
 all::
-	\rm */*.a */*/*.a; make Drbsp;
+	\rm */*.a */*/*.a; make rdbsp;
 clean::
 	\rm -r *.o ii_files/ */ii_files/ */*/ii_files/;
 
