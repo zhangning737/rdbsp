@@ -1,0 +1,585 @@
+<!doctype html>
+<html>
+<head>
+    <title>Documentation of Rock Dynamic Behavior Simulation Program</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+		body {
+			background-color: #d2b48c;
+			margin-left: 20%;
+			margin-right: 20%;
+            border: 2px dotted black;
+            padding: 10px 10px 10px 10px;
+			font-family: sans-serif;
+		}
+        table,table tr th, table tr td { 
+            border:1px solid #000000; 
+            }
+</style>
+</head>
+
+<body>
+    <h1>Documentation of Rock Dynamic Behavior Simulation Program</h1>
+    <h2>1. Background</h2>
+    <p>
+            The spectrum of rock dynamic behavior widely includes phenomena of rockbursting, spalling, popping, collapse, toppling, sliding, and so on, which induced by the stress redistribution and energy release after excavation. Rock dynamics has become one of the most important topics in the field of rock mechanics and rock engineering. 
+    </p>
+    <p>
+            Rock behaviour mechanisms can occur at significantly different rates: during the excavation of rock using explosives, rock failure occurs in 
+            milliseconds; a rock block can slip out of a cavern roof in a second; a shaft might take a day to fill up with water; a chalk or mudstone face can deteriorate in a few days. It may take months or years for water to move through a granitic rock mass and, during the 120 years design life of an unlined rock cavern for civil engineering purposes, creep processes could lead to roof collapse. Some geological processes occur over millions of years.
+    </p>
+    <p>
+            In view of this time dependency over a wide time range, it is convenient to consider the rate at which such processes occur in terms of strain rate. Consider a rock cylinder subjected to uniaxial compression along its axis and that the rock’s compressive strength is reached at 0.5% strain, i.e. 0.005 or 5 × 10<sup>−3</sup> strain. At a strain rate of 1 × 10<sup>−3</sup> s <sup>−1</sup>, the rock specimen will fail in 5 s. At a strain rate of 1 × 10<sup>−4</sup> s <sup>−1</sup>, the rock specimen will fail in 50 s. For explosive failure in 2 ms, the strain rate would be 5 × 10<sup>−3</sup>/2 × 10<sup>−3</sup> = 2.5 or 2.5 × 100 s<sup>−1</sup>. <!--Note that there are four orders of magnitude difference between the slowest and fastest of these examples.-->
+    </p>
+    <p>
+            A range of strain rates is shown in Figure below. These are the strain rates per second, and above the strain rate scale some failure times for the rock specimen are shown<a href="#footnote-1">[1]</a>.
+    </p>
+    <p><center><img src="images/dynamic_and_quasi_static.gif" /></center></p>
+    <p>
+            Currently most algorithm of rock simulations is besed on continuum mechanics, which actually works well during the design. Further researches need figure out more scientific detail of dynamic failure of rocks. Discontinuous or fracture mechanics is essential. Discontinuous deformation analysis(DDA, a type a discrete element method) could account for the interaction of independent particles(blocks) along discontinuities in fractured and jointed rock masses<a href="#footnote-2">[2]</a>. While both prepeak and postpeak behaviors should be concerned, developers of this code tried a different way to simulate the dynamic of rocks using a new fracture model<a href="#footnote-3">[3]</a>. During testing this model in commercial software, we found limitations of accessing some internal variables and difficulties for debuging. So we developed this code based on explicit Finite Element method, and share most of our code here.
+    </p>
+
+    <h2>2. Functionality</h2>
+    <p>
+        This explicit dynamic finite element program is utilized to calculate the deep rock mass deformation, which is written by the c++ language and calculated using a single integration point block element with eight nodes.
+        To eliminate the hourglass effect in calculation, the hourglass resistance, which is perpendicular to the rotation modal of rigid body and established by Belytschko and Flanagan in 1982, is applied in this program.
+        The Jaumann derivative is added into the program with the concern of the effect of the rigid body rotation to solve the difficulty of the large deformation calculation for the deep rock mass.
+        The program enables both the static and the dynamic finite element calculation. The geometric model can be built by the Hypermesh pre-processing software via the keyword recognition and post-processing interfaces, and the calculated result can be shown by the two post-processing programs Tecplot or Paraview.
+    </p>
+
+
+    <h2> 3. Requirements</h2>
+    <ul>
+        <li>System: Linux 2.6+</li>
+        <li>Software enviorment: Intel compiler with MKL(community edition， 2013+), yacc, lex</li>
+        <li>Hardware: Any AMD64 arch platform</li>
+    </ul>
+
+
+    <h2> 4. Installation </h2>
+    <p>
+        1. Install intel compiler with MKL(fortran compiler is also recommanded) <br>
+        2. Make -f Makefile_LINUX64, generate <q>rdbsp</q> binary file<br>
+        3. Copy to any where you want<br>
+    </p>
+
+    <h2>5. How to use</h2>
+
+    <p>
+        The program is running on command line enviorment. It has three options, using <q>-i</q> defines the name of input file, or you need to type the input file at terminal(Don't do that except debuging, please edit you input file before runing it.). using <q>-r</q> difines the name of status file, this option is used for restart an analysis. Using <q>-r</q> difines the name of output file <br> <br>
+        The usage as following:    
+    </p>
+    <blockquote>
+            usage: cmd [ -i input file name] [-r <restart filename>] [-o <output filename>][?]
+    </blockquote>
+
+    <h2>6. Input file preparation</h2>
+    <p>
+            The input file, like most FEM software, difined by keyword and data lines. Test files in this project provide a example of dynamic unloading simulation for a tunnel. Those files could show the brief structure of the input file. The input file starts with node and element difination, then material parameters, boundary conditions and solver configuration. The input file is not case sensitive. The format of float data should be noted here. The float data should be only wroten as <q>X.X , .X,X., .XeX, X.EX, X.DX, .XdX</q>. The keywords and data format as below:<br><br>
+    </p>
+    <h3>6.1. Node</h3>
+    <p>
+        <b>Keyword:</b> *NODE
+    </p>
+
+    <p>
+        Define node ID and its coordinate.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Node ID</th>
+              <th>X Coordinate</th>
+              <th>Y Coordinate</th>
+              <th>Z Coordinate</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Float</td>
+              <td>Float</td>
+              <td>Float</td>
+            </tr>
+          </table>
+    </p>
+
+    <h3>6.2. Fixed boundary</h3>
+    <p>
+        <b>Keyword:</b> *FIXNODE
+    </p>
+
+    <p>
+        Define fixed boundary on nodes.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Node ID</th>
+              <th>X </th>
+              <th>Y </th>
+              <th>Z </th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Bool</td>
+              <td>Bool</td>
+              <td>Bool</td>
+            </tr>
+          </table>
+    </p>
+
+    <h3>6.3. Element</h3>
+    <p>
+        <b>Keyword:</b> *ELEMENT
+    </p>
+
+    <p>
+        Define element.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Element ID</th>
+              <th>Element Type</th>
+              <th>Node ID 1</th>
+              <th>...</th>
+              <th>Node ID N</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Integer</td>
+              <td>Integer</td>
+              <th>...</th>
+              <td>Integer</td>
+            </tr>
+          </table>
+    </p>
+
+    <h3>6.4. Material</h3>
+    <p>
+        <b>Keyword:</b> *MATERIAL
+    </p>
+
+    <p>
+        Define material property.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Material ID</th>
+              <th>Material Type</th>
+              <th>Parameter 1</th>
+              <th>...</th>
+              <th>Parameter N</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Integer</td>
+              <td>Float</td>
+              <th>...</th>
+              <td>Float</td>
+            </tr>
+          </table>
+    </p>
+    
+    <h3>6.5. Attribute</h3>
+    <p>
+        <b>Keyword:</b> *ATTRIBUTTE
+    </p>
+
+    <p>
+        Define material ID for elements.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Element ID</th>
+              <th>Material ID</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Integer</td>
+            </tr>
+          </table>
+    </p>   
+
+    <h3>6.6. Displacement Boundary</h3>
+    <p>
+        <b>Keyword:</b> *DISPLACEMENT
+    </p>
+
+    <p>
+        Define displacement boundary on nodes.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Node ID</th>
+              <th>Direction</th>
+              <th>Curve ID</th>
+              <th>Magnitude</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>1/2/3</td>
+              <td>Integer</td>
+              <th>Float</th>
+            </tr>
+          </table>
+    </p>
+
+    <h3>6.7. Node Force</h3>
+    <p>
+        <b>Keyword:</b> *FORCE
+    </p>
+
+    <p>
+        Define node force on nodes.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Node ID</th>
+              <th>Direction</th>
+              <th>Curve ID</th>
+              <th>Magnitude</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>1/2/3</td>
+              <td>Integer</td>
+              <th>Float</th>
+            </tr>
+          </table>
+    </p>
+
+    <h3>6.8. Surface Pressure</h3>
+    <p>
+        <b>Keyword:</b> *PRESSURE
+    </p>
+
+    <p>
+        Define pressure on surfaces.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Curve ID</th>
+              <th>Magnitude</th>
+              <th>Node ID 1</th>
+              <th>...</th>
+              <th>Node ID N</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Float</td>
+              <td>Integer</td>
+              <th>...</th>
+              <th>Integer</th>
+            </tr>
+          </table>
+    </p>    
+
+    <h3>6.9. Curve</h3>
+    <p>
+        <b>Keyword:</b> *CURVE
+    </p>
+
+    <p>
+        Define curves.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Curve ID</th>
+              <th>Time 1</th>
+              <th>Magnitude 1</th>
+              <th>...</th>
+              <th>...</th>
+              <th>Time N</th>
+              <th>Magnitude N</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Float</td>
+              <td>Float</td>
+              <th>...</th>
+              <th>...</th>
+              <th>Float</th>
+              <th>Float</th>
+            </tr>
+          </table>
+    </p>   
+
+    <h3>6.10. Gravity</h3>
+    <p>
+        <b>Keyword:</b> *GRAVITY
+    </p>
+
+    <p>
+        Define body force on volume.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Magnitude on X direction</th>
+              <th>Magnitude on Y direction</th>
+              <th>Magnitude on Z direction</th>
+            </tr>
+            <tr>
+              <td>Float</td>
+              <td>Float</td>
+              <td>Float</td>
+            </tr>
+          </table>
+    </p>  
+
+
+    <h3>6.11. Control slove time</h3>
+    <p>
+        <b>Keyword:</b> *TERMINATION, STATIC
+    </p>
+
+    <p>
+        TERMINATION could be used define end time, STATIC could be used when using the dynamic solver to solve a quasi-static problem. The maximum node motion energy should be defined when using keyword STATIC.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>End time/Maximum motion energy</th>
+            </tr>
+            <tr>
+              <td>Float</td>
+            </tr>
+          </table>
+    </p>  
+
+    <h3>6.12. Time step</h3>
+    <p>
+        <b>Keyword:</b> *TIMESTEP
+    </p>
+
+    <p>
+        Define time step for solver.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Initial time step</th>
+              <th>Factor</th>
+            </tr>
+            <tr>
+              <td>Float</td>
+              <td>Float</td>
+            </tr>
+          </table>
+    </p>  
+
+
+    <h3>6.13. Initial state of acceleration</h3>
+    <p>
+        <b>Keyword:</b> *IACC
+    </p>
+
+    <p>
+        Define initial acceleration.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Node ID</th>
+              <th>Magnitude X</th>
+              <th>Magnitude Y</th>
+              <th>Magnitude Z</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Float</td>
+              <td>Float</td>
+              <td>Float</td>
+            </tr>
+          </table>
+    </p> 
+
+    <h3>6.14. Initial state of velocity</h3>
+    <p>
+        <b>Keyword:</b> *IVEL
+    </p>
+
+    <p>
+        Define initial velocity.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Node ID</th>
+              <th>Magnitude X</th>
+              <th>Magnitude Y</th>
+              <th>Magnitude Z</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Float</td>
+              <td>Float</td>
+              <td>Float</td>
+            </tr>
+          </table>
+    </p> 
+
+    <h3>6.15. Initial state of stress</h3>
+    <p>
+        <b>Keyword:</b> *INISTRESS
+    </p>
+
+    <p>
+        Define initial stress for elements.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Element ID</th>
+              <th> X</th>
+              <th> Y</th>
+              <th> Z</th>
+              <th>XY</th>
+              <th>YZ</th>
+              <th>ZX</th>
+            </tr>
+            <tr>
+              <td>Integer</td>
+              <td>Float</td>
+              <td>Float</td>
+              <td>Float</td>
+              <td>Float</td>
+              <td>Float</td>
+              <td>Float</td>
+            </tr>
+          </table>
+    </p> 
+
+    <h3>6.16. Solver</h3>
+    <p>
+        <b>Keyword:</b> *SOLVER
+    </p>
+
+    <p>
+        Define dynamic/static solver.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Type of Solver</th>
+            </tr>
+            <tr>
+              <td>0/1</td>
+            </tr>
+          </table>
+    </p> 
+
+    <h3>6.17. Output</h3>
+    <p>
+        <b>Keyword:</b> *OUTPUT
+    </p>
+
+    <p>
+        Define output data list.
+    </p>  
+    <p>
+        Data line:<br>
+        <table>
+            <tr>
+              <th>Output Intervel</th>
+            </tr>
+            <tr>
+              <td>Float</td>
+            </tr>
+            <tr>
+                <th>Node Output List</th>
+              </tr>
+              <tr>
+                <td>Node output index</td>
+              </tr>
+              <tr>
+                <th>Element Output List</th>
+              </tr>
+              <tr>
+                <td>Element output index</td>
+              </tr>
+          </table>
+    </p> 
+
+    <h3>6.18. Remove the displacement&velocity&acceleration before solve</h3>
+    <p>
+        <b>Keyword:</b> *CLEARDVA
+    </p>
+
+    <p>
+        Define remove all data on nodes.
+    </p>  
+    <p>
+        Don't have data line<br>
+    </p> 
+
+    <h3>6.19. End</h3>
+    <p>
+        <b>Keyword:</b> *END
+    </p>
+
+    <p>
+        Define end of the input file, let main program return to main loop.
+    </p>  
+    <p>
+        Don't have data line<br>
+    </p> 
+
+ 
+    <h2>7. Tests</h2>  
+
+    <p><center><img src="images/model.png"  width="360" alt="Structure of this program"/></center></p>
+
+    <h2>8. Developers guidelines</h2>
+    The structure.
+    <p><center><img src="images/structure.png"  width="600" alt="Structure of this program"/></center></p>
+    parser
+    
+    The classes
+
+    memcontrol
+
+    vector
+
+    map
+
+
+
+
+
+ 
+
+
+
+    <br><br><br><br><br><br><br><br>
+    <p id="footnote-1">[1] John P. Harrison and John A. Hudson. Engineering Rock Mechanics. Pergamon, Oxford, 2000, p:215-229.</p>
+    <p id="footnote-2">[2] Shi GH. Block system modeling by discontinuous deformation analysis. Computational Mechanics Publications, 1993.</p>
+    <p id="footnote-3">[3] Mingyang Wang, Ning Zhang, Jie Li, et al. Computational method of large deformation and its application in deep mining tunnel. Tunnelling and Underground Space Technology, 2015, p:47-53</p>
+
+
+</body>
+
+</html>
+

@@ -5,4 +5,4 @@ rm *.o
 rm */*.o
 make -f Makefile_LINUX64
 #idb ./dcp
-cp dcp ../wodetest/dcpnew
+#cp dcp ../wodetest/dcpnew
