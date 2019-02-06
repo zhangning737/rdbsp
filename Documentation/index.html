@@ -51,7 +51,7 @@
     <h2> 3. Requirements</h2>
     <ul>
         <li>System: Linux 2.6+</li>
-        <li>Software enviorment: Intel compiler with MKL(community edition， 2013+), yacc, lex</li>
+        <li>Software enviorment: Intel compiler with MKL, community edition， 2013+</li>
         <li>Hardware: Any AMD64 arch platform</li>
     </ul>
 
@@ -75,7 +75,7 @@
 
     <h2>6. Input file preparation</h2>
     <p>
-            The input file, like most FEM software, difined by keyword and data lines. Test files in this project provide a example of dynamic unloading simulation for a tunnel. Those files could show the brief structure of the input file. The input file starts with node and element difination, then material parameters, boundary conditions and solver configuration. The input file is not case sensitive. The format of float data should be noted here. The float data should be only wroten as <q>X.X , .X,X., .XeX, X.EX, X.DX, .XdX</q>. The keywords and data format as below:<br><br>
+            The input file, like most FEM software, difined by keyword and data lines. Test files in this project provide a example of dynamic unloading simulation for a tunnel. Those files could show the brief structure of the input file. The input file starts with node and element difination, then material parameters, boundary conditions and solver configuration. The input file is not case sensitive. The format of float data should be noted here. The float data should be only wroten as <q>X.X , .X,X., .XeX, X.EX, X.DX, .XdX</q>. Percent sign could comment one line. The keywords and data format as below:<br><br>
     </p>
     <h3>6.1. Node</h3>
     <p>
@@ -549,27 +549,71 @@
 
  
     <h2>7. Tests</h2>  
+    <p>
+        In the repository, the example of dynamic unloading of a tunnel is given. The dimensions of the model is shown as following figure. Initial stress is applied 20MPa and 15MPa at horizontal and vertical respectively. The total solving time is setted to 1×10<sup>−1</sup>s, and fixed time-step with 1×10<sup>−5</sup>s is used. Both static and Mohr Coulomb plastic model are tested in the example. The output format of VTK is sellected in that example.
+    </p>
+    <figure>
+        <p><center><img src="images/model.png"  width="360" alt="model"/></center></p>
+        <center><figcaption>Dimensions of testing model</figcaption></center>
+    </figure>  
 
-    <p><center><img src="images/model.png"  width="360" alt="Structure of this program"/></center></p>
-
-    <h2>8. Developers guidelines</h2>
-    The structure.
-    <p><center><img src="images/structure.png"  width="600" alt="Structure of this program"/></center></p>
-    parser
     
-    The classes
-
-    memcontrol
-
-    vector
-
-    map
-
-
-
-
-
- 
+    <h2>8. Developer guidelines</h2>
+    <p>
+        The structure of this program is shown below. As shown in the figure, the input file first is interprated by the progam, and initial a class called "domain", which includes data of nodes, elements, and control variables for solver. During the "domain" intiallization, a dynamic memory management class "BlockAlloc" could apply a 4K block when there is no enough memory for the "domain". The memory management unit seems old style now, we wish we could update to more mordern one then. After data input, a function "preProcess" will be called to remove elements without material property, generate a map list for elements and nodes, apply intial stress and boundary condition. Then the main loop "solve" function will be called to solve the problem with a dynamic FEM solver.
+    </p>
+    <p><center><img src="images/structure.png"  width="600" alt="Structure of this program"/></center></p>
+    <p>
+        The folders contain content shown below: 
+    </p>
+    <p>
+        <table>
+            <tr>
+                <th>Folder</th>
+                <th>Functions</th>
+            </tr>
+            <tr>
+                <td>Documentation</td>
+                <td>Documentation of this repository</td>
+            </tr>
+            <tr>
+                <td>Driver.d</td>
+                <td>Class Domain, including all the data and solving functions of main loop</td>
+            </tr>
+            <tr>
+                <td>Element.d</td>
+                <td>Classes of Nodeset, Elementset, Node and Element</td>
+            </tr>
+            <tr>
+                <td>Material.d</td>
+                <td>Classes of Materialset and Material, Material has child class of Elastic and Mohr Coulomb model</td>
+            </tr>
+            <tr>
+                <td>Parser.d</td>
+                <td>lexerl.l defines the grammer of the input file</td>
+            </tr>  
+            <tr>
+                <td>Solvers.d</td>
+                <td>Some header files for solver</td>
+            </tr> 
+            <tr>
+                <td>TecplotIO.d</td>
+                <td>Header files for Tecplot output</td>
+            </tr> 
+            <tr>
+                <td>Tests</td>
+                <td>Testing example</td>
+            </tr>  
+            <tr>
+                <td>Timers.d_LINUX64</td>
+                <td>Get system time and static solving time</td>
+            </tr>   
+            <tr>
+                <td>Utils.d</td>
+                <td>Memory managment, cuvre data, reading and wring status file, and some other utilities</td>
+            </tr>           
+            </table>
+    </p>
 
 
 
