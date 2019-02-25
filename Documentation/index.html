@@ -548,7 +548,60 @@
     </p> 
 
  
-    <h2>7. How to run the test</h2>  
+    <h2>7. About testing</h2>  
+    <p>
+         The project files are included in the tests folder in this repository, in which material model tests and unloading tests of tunnel could be found. Those tests could verfy the material behaviors under constant loading and instant unloading. In rock mechanics, we commonly use elastic model and Mohr-Coulomb model to descibe rock dynamic behavior and wave propagation in rocks, so here those two materials are tested. Now We are still discuss the issue about opening the fracture model in Github, unfortnately consensus didn't reach yet. We wish more tests could be done by other contributors.  
+    </p>
+    <p>
+      The tests could be run using following command:
+      <blockquote >
+        cd Tests/testprjfolder <br>
+        ./../../rdbsp -i projectname
+      </blockquote> 
+    </p>
+    <h3> 7.1 Material model tests </h3>
+    <h4> 7.1.1 Elastic</h4>
+    <p>
+      We test dynamic behavior of elastic material by applying dynamic loading on one 3D element. With fixed all boundary expect Y direction could minimize the number of variables need for monitoring. Setting velocity of Y direction v = 0.001mm/s, the total solving time 125s. The analytical results should be:
+    </p>
+    <figure>
+      <p><center><img src="images/elastic_analytical_result.png"  width="120" alt="model"/></center></p>
+    </figure> 
+    <p>where, G is the shear module, K is the bulk module.</p>
+
+    <figure>
+      <p><center><img src="images/testModelOneElement.png"  width="360" alt="model"/></center></p>
+      <center><figcaption>Testing model with one element</figcaption></center>
+    </figure>  
+
+    <p>
+      The analytical results and rdbsp results perfect match.
+    </p>
+    <figure>
+      <p><center><img src="images/elastic_result.png"  width="360" alt="model"/></center></p>
+      <center><figcaption>Elastic model testing results</figcaption></center>
+    </figure>  
+
+    <h4> 7.1.2 Mohr-Coulomb </h4>
+    <p>
+        The testing model is similar to elastic material test, while the analytical results could be found as following:
+    </p>
+
+    <figure>
+      <p><center><img src="images/mohr-coulombEquations.png"  width="360" alt="model"/></center></p>
+    </figure> 
+    <p>where, E1, E2, NF, NP, RL is internal variables, F is the stress of Y direction.</p>
+
+    <figure>
+        <p><center><img src="images/mohrResults.png"  width="360" alt="model"/></center></p>
+        <center><figcaption>Mohr-Coulomb model testing results</figcaption></center>
+    </figure> 
+
+    <p>
+      The analytical results and rdbsp results perfect match.
+    </p>
+
+    <h3> 7.2 Dynamic and static unloading of tunnel</h3>
     <p>
         In the repository, the example of dynamic unloading of a tunnel is given. The dimensions of the model is shown as following figure. Initial stress is applied 20MPa and 15MPa at horizontal and vertical respectively. The total solving time is setted to 1×10<sup>−1</sup>s, and fixed time-step with 1×10<sup>−5</sup>s is used. Both static and Mohr Coulomb plastic model are tested in the example. The output format of VTK is sellected in that example.
     </p>
@@ -556,6 +609,40 @@
         <p><center><img src="images/model.png"  width="360" alt="model"/></center></p>
         <center><figcaption>Dimensions of testing model</figcaption></center>
     </figure>  
+    <h4> 7.2.1 Elastic model</h4>
+    First, the static results of circle tunnel unloading have analytical solution. So we compare the static solution of rdbsp to the analytical solution.
+    <figure>
+        <p><center><img src="images/analyticalSolutionTunnel.png"  width="300" alt="model"/></center></p>
+    </figure>  
+    <p>where, σr is the stress in the radial direction, σθ is the stress in the circumferential direction, u is the displacement.</p>
+    <figure>
+        <p><center><img src="images/elasticStressTunnel.png"  width="360" alt="model"/></center></p>
+        <center><figcaption>Tunnel unloading static results of stress</figcaption></center>
+    </figure>  
+    <p>Static results perfect match with analytical results. For dynamic result we samply compare our results to commerical software FLAC3D. The results seem not match perfectly, since it depends on the damping coefficent.</p>  
+    <figure>
+        <p><center><img src="images/elasticDynamicTunnel.png"  width="360" alt="model"/></center></p>
+        <center><figcaption>Tunnel unloading dynamic results of stress</figcaption></center>
+    </figure>  
+
+    <h4> 7.2.2 Mohr-Coulomb model</h4>
+    Comparing the static and dynamic results with FLAC3D. The static stress, dynamic stress, and plastic zone match perfectly.
+    <figure>
+        <p><center><img src="images/plasticStressTunnel.png"  width="360" alt="model"/></center></p>
+        <center><figcaption>Tunnel unloading static results of stress</figcaption></center>
+    </figure>  
+
+    <figure>
+        <p><center><img src="images/plasticZoneTunnel.png"  width="600" alt="model"/></center></p>
+        <center><figcaption>Tunnel unloading static results of plastic zone</figcaption></center>
+    </figure>  
+
+    <figure>
+        <p><center><img src="images/plasticDynamicTunnel.png"  width="360" alt="model"/></center></p>
+        <center><figcaption>Tunnel unloading dynamic results of stress</figcaption></center>
+    </figure>  
+
+
 
     
     <h2>8. Developer guidelines</h2>
