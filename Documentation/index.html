@@ -642,10 +642,26 @@
         <center><figcaption>Tunnel unloading dynamic results of stress</figcaption></center>
     </figure>  
 
+    <h2> 8. Example</h2>
+    <p>
+      One usage of our code is Huinan mining tunnel. we used this code to evaluate deformation process after instant unloading, since this mining tunnel got more than 30cm displacement after about 100 days. Here we just refer the code and input file of solver, the fracture model could be public later.
+    </p>
+    <p> 
+      The example could be run using following command:
+      <blockquote >
+        cd Tests/HuainanMingTunnel <br>
+        ./../../rdbsp -i huainan.inp
+      </blockquote> 
+    </p>
 
+    <p>Following results shows what we obtained, but in attached example, the displacement will be smaller than this figure, since no fracture in the model.</p>
+    <figure>
+      <p><center><img src="images/huainan.png"  width="360" alt="model"/></center></p>
+      <center><figcaption>Displacement results of Huainan mining tunnel after 128 days</figcaption></center>
+  </figure> 
 
     
-    <h2>8. Developer guidelines</h2>
+    <h2>9. Developer guidelines</h2>
     <p>
         The structure of this program is shown below. As shown in the figure, the input file first is interprated by the progam, and initial a class called "domain", which includes data of nodes, elements, and control variables for solver. During the "domain" intiallization, a dynamic memory management class "BlockAlloc" could apply a 4K block when there is no enough memory for the "domain". The memory management unit seems old style now, we wish we could update to more mordern one then. After data input, a function "preProcess" will be called to remove elements without material property, generate a map list for elements and nodes, apply intial stress and boundary condition. Then the main loop "solve" function will be called to solve the problem with a dynamic FEM solver.
     </p>
