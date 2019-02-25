@@ -1,4 +1,9 @@
-1. Functionality
+1. Background
+----------------
+
+Rock dynamics has become one of the most important topics in the field of rock mechanics and rock engineering. The spectrum of rock dynamic behavior widely includes phenomena of rockbursting, spalling, popping, collapse, toppling, sliding, and so on, which induced by the stress redistribution and energy release after excavation. Current version of rdbsp arms to simulate the process of displacement field redistribution and stress wave propagation in deep underground rock with finite element method. Forward Euler time integration scheme is adapted in this program to simulate the dynamic procedure . 
+
+2. Functionality
 ----------------
 
 This explicit dynamic finite element program is utilized to calculate
@@ -16,7 +21,7 @@ via the keyword recognition and post-processing interfaces, and the
 calculated result can be shown by the two post-processing programs
 Tecplot or Paraview.
 
-2. Requirements
+3. Requirements
 ---------------
 
 -   System: Linux 2.6+
@@ -24,7 +29,7 @@ Tecplot or Paraview.
     2013+
 -   Hardware: Any AMD64 arch platform
 
-3. Installation
+4. Installation
 ---------------
 
 -  Install intel compiler with MKL(fortran compiler is also
@@ -32,7 +37,7 @@ recommanded)
 -  Make -f Makefile\_LINUX64, generate "rdbsp" binary file
 -  Copy to any where you want
 
-4. Usage
+5. Usage
 -------------
 
 The program is running on command line enviorment. It has three options,
@@ -46,7 +51,7 @@ The usage as following:
 
 > usage: cmd \[ -i input file name\] \[-r \] \[-o \]\[?\]
 
-5. Guidelines of coding
+6. Guidelines of coding
 ------------------------
 
 The structure of this program is shown below. As shown in the figure,
