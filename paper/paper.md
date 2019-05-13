@@ -7,12 +7,10 @@ tags:
 authors:
  - name: Zhang Ning
    orcid: 0000-0003-3597-0691
-   affiliation: "1, 2"
+   affiliation: "1"
 affiliations:
  - name: School of Science, Nanjing Unversity of Science and Technology
    index: 1
- - name: Department of Soil Mechanics and Foundation Engineering, Technische Universit盲t Bergakademie Freiberg
-   index: 2
 date: 30 November 2018
 bibliography: paper.bib
 ---

@@ -32,8 +32,7 @@ Tecplot or Paraview.
 4. Installation
 ---------------
 
--  Install intel compiler with MKL(fortran compiler is also
-recommanded)
+-  Register as an **Open Source Contributors** and download & install community version [**Intel® Parallel Studio XE**](https://software.intel.com/en-us/parallel-studio-xe/choose-download)
 -  Make -f Makefile\_LINUX64, generate "rdbsp" binary file
 -  Copy to any where you want
 
