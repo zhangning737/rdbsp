@@ -12,7 +12,7 @@ Terminals unused in grammar
 
 Rules useless in parser due to conflicts
 
-  128 History: /* empty */
+  128 History: %empty
 
 
 State 0 conflicts: 35 shift/reduce, 36 reduce/reduce
@@ -171,7 +171,7 @@ Grammar
 
   105 SetEndTime: TERM NewLine Float NewLine
 
-  106 TimeStep: /* empty */
+  106 TimeStep: %empty
   107         | TIMESTEP NewLine Float NewLine
   108         | TIMESTEP COMMA TYPE EQUALSIGN TIMESTEP_AUTO NewLine Float NewLine
   109         | TIMESTEP COMMA TYPE EQUALSIGN TIMESTEP_FIXED NewLine Float NewLine
@@ -198,7 +198,7 @@ Grammar
   126 EOutList: EOUTPUTID
   127         | EOutList EOUTPUTID
 
-  128 History: /* empty */
+  128 History: %empty
   129        | HISTORY NewLine Integer NewLine
 
   130 HisOutput: HISOUTPUT NewLine Float NewLine
@@ -261,8 +261,8 @@ Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-IntConstant (258) 160 161
-DblConstant (259) 162
+IntConstant <ival> (258) 160 161
+DblConstant <fval> (259) 162
 NODE (260) 39
 NewLine (261) 39 41 42 43 44 45 46 48 50 51 52 56 57 58 59 60 61 64
     65 66 67 70 71 72 75 76 77 78 81 82 85 86 87 88 89 90 91 94 95
@@ -272,7 +272,7 @@ NewLine (261) 39 41 42 43 44 45 46 48 50 51 52 56 57 58 59 60 61 64
     155 156 157 158 159
 ELEMENT (262) 44 45 46 48
 ZERO (263)
-STRNAME (264)
+STRNAME <strval> (264)
 END (265) 1
 MATERIAL (266) 56 57 58 59
 DISP (267) 64
@@ -291,8 +291,8 @@ TIMESTEP (279) 107 108 109 110
 DYNA (280) 111
 SOLV (281) 111
 OUTPUT (282) 112 113 114 115 116 117 118 119 120 121 122 123
-NOUTPUTID (283) 124 125
-EOUTPUTID (284) 126 127
+NOUTPUTID <ival> (283) 124 125
+EOUTPUTID <ival> (284) 126 127
 HISTORY (285) 129
 HISOUTPUT (286) 130
 HOURGLASS (287) 87 88
@@ -315,14 +315,14 @@ FENQUPL (303) 159
 TYPE (304) 44 45 46 56 57 91 108 109 110 140
 ESET (305)
 C3D8R (306)
-TIMESTEPID (307)
+TIMESTEPID <ival> (307)
 TIMESTEP_FIXED (308) 109
 TIMESTEP_CURVE (309) 110
 TIMESTEP_AUTO (310) 108
 ID (311) 56 57 100 155 156
-IDNO (312)
+IDNO <ival> (312)
 COMMA (313) 44 45 46 56 57 91 100 108 109 110 140 155 156
-ELEMENTTYPE (314)
+ELEMENTTYPE <ival> (314)
 EPART (315) 45 46 91 140
 EQUALSIGN (316) 44 45 46 56 57 91 100 108 109 110 140 155 156
 Element_Solid (317) 47
@@ -343,51 +343,51 @@ Component (68)
     24 25 26 27 28 29 30 31 32 33 34 35 36 37 38, on right: 2 3
 NodeSet (69)
     on left: 39 40, on right: 4 40
-Node (70)
+Node <nval> (70)
     on left: 41 42 43, on right: 39 40
 ElemSet (71)
     on left: 44 45 46 47 48 49, on right: 5 47 49
 Element (72)
     on left: 50, on right: 48 49
-Element_Solid_List (73)
+Element_Solid_List <nlist> (73)
     on left: 51 52, on right: 44 45 46 52
-NodeNums (74)
+NodeNums <nlist> (74)
     on left: 53 54 55, on right: 50 51 52 54 157 158
 MatSet (75)
     on left: 56 57 58 59, on right: 6
-PropsList (76)
+PropsList <pl> (76)
     on left: 60 61, on right: 56 57 58 59 61
-Props (77)
+Props <pl> (77)
     on left: 62 63, on right: 60 61 63
-DirichletBC (78)
+DirichletBC <bclist> (78)
     on left: 64, on right: 7
-NeumanBC (79)
+NeumanBC <bclist> (79)
     on left: 65, on right: 8
 IVel (80)
     on left: 66, on right: 9
 IAcc (81)
     on left: 67, on right: 10
-BCDataList (82)
+BCDataList <bclist> (82)
     on left: 68 69, on right: 64 65 66 67 69
-BC_Data (83)
+BC_Data <bcval> (83)
     on left: 70 71, on right: 68 69
-BoundaryFix (84)
+BoundaryFix <bcflist> (84)
     on left: 72, on right: 19
-BCFDataList (85)
+BCFDataList <bcflist> (85)
     on left: 73 74, on right: 72 74
-BCF_Data (86)
+BCF_Data <bcfix> (86)
     on left: 75 76 77, on right: 73 74
 IStr (87)
     on left: 78, on right: 11
 IStressList (88)
     on left: 79 80, on right: 78 80
-IStressData (89)
+IStressData <istr> (89)
     on left: 81, on right: 79 80
 Pressure (90)
     on left: 82, on right: 18
 PressureList (91)
     on left: 83 84, on right: 82 84
-PresData (92)
+PresData <bp> (92)
     on left: 85, on right: 83 84
 SetLarge (93)
     on left: 86, on right: 12
@@ -407,9 +407,9 @@ PAttData (100)
     on left: 98 99, on right: 96 97
 ReadCurve (101)
     on left: 100 101, on right: 16
-CurveDataList (102)
+CurveDataList <clist> (102)
     on left: 102 103, on right: 100 101 103
-CurveData (103)
+CurveData <ccoef> (103)
     on left: 104, on right: 102 103
 SetEndTime (104)
     on left: 105, on right: 17
@@ -462,15 +462,15 @@ NodePart (127)
     on left: 155, on right: 36
 ElemPart (128)
     on left: 156, on right: 37
-PartList (129)
+PartList <ptemp> (129)
     on left: 157 158, on right: 155 156 158
 FenQu (130)
     on left: 159, on right: 38
-Integer (131)
+Integer <ival> (131)
     on left: 160, on right: 41 42 43 45 46 50 51 52 53 54 55 56 57
     58 70 71 75 76 77 81 85 87 88 94 95 98 99 100 110 112 113 116 117
     118 119 121 122 129 132 133 135 136 138 141 142 143 144 155 156
-Float (132)
+Float <fval> (132)
     on left: 161 162, on right: 41 42 43 62 63 70 81 85 88 89 104 105
     107 108 109 113 114 115 117 119 120 122 123 130 137 145 149 151
     153 159

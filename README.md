@@ -25,8 +25,8 @@ Tecplot or Paraview.
 ---------------
 
 -   System: Linux 2.6+
--   Software enviorment: Intel compiler with MKL, community edition，
-    2013+
+-   Software enviorment: Intel compiler with MKL(community edition，
+    2013+), bison, flex
 -   Hardware: Any AMD64 arch platform
 
 4. Installation

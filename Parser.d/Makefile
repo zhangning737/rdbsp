@@ -11,10 +11,10 @@ CFLAGS = $(CXXFLAGS)
 $(LIBDIR)libparser.a: $(OBJS)
 
 y.tab.c: p.y
-	yacc -d -v p.y
+	bison.yacc -d -v p.y
 
 lex.yy.c: lexer.l $(LIB)(y.tab.o)
-	lex -i lexer.l
+	flex -i lexer.l
 
 $(LIB)(lex.yy.o): lex.yy.c y.tab.h auxx.h
 
