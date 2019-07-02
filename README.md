@@ -32,7 +32,8 @@ Tecplot or Paraview.
 4. Installation
 ---------------
 
--  Register as an **Open Source Contributors** and download & install community version [**Intel® Parallel Studio XE**](https://software.intel.com/en-us/parallel-studio-xe/choose-download)
+-  Register as an **Open Source Contributors** and download & install community version [**Intel® Parallel Studio XE**](https://software.intel.com/en-us/parallel-studio-xe/choose-download). Configure the compile enviornment by running `source /opt/intel/<compilers_and_libraries_version>/linux/bin/compilervars.sh intel64`.
+-  Install bison and flex with command `apt install bison flex`
 -  Make -f Makefile\_LINUX64, generate "rdbsp" binary file
 -  Copy to any where you want
 
