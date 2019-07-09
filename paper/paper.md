@@ -26,6 +26,6 @@ rdbsp is a fully functional simulation program with modules for input file inter
 ![Working flow of rdbsp.](figshare_article.png)
 
 # Acknowledgement
-Supported by "the Fundamental Research Funds for the Central Universities"(No. 30917011337) and "the Program of China Scholarships Council" (No. 201806845032)
+Supported by "The Fundamental Research Funds for the Central Universities"(No. 30917011337) and "The Program of China Scholarships Council" (No. 201806845032)
 
 # References
