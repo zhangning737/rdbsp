@@ -1,9 +1,0 @@
-RANLIB = echo
-
-MAKE   = make
-
-CXX = icpc
-FC  = ifort
-
-FFLAGS = -lifcore -limf  -mkl -f77rtl -names lowercase -assume nounderscore 
-CXXFLAGS= -L/opt/intel/lib/intel64 -lifcore -limf  -mkl 
