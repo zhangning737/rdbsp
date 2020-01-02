@@ -5,31 +5,28 @@
 
 #include "../Element.d/Element.h"
 #include "../Element.d/Part.h"
-#include "../Utils.d/resize_array.h"
-#include "../Timers.d/MatrixTimers.h"
 #include "../Material.d/material.h"
-#include "../Utils.d/curve.h"
-#include "../Utils.d/Solverinfo.h"
-#include "../Solvers.d/Solver.h"
-#include "../Solvers.d/Damping.h"
-#include "../Utils.d/OutputInfo.h"
 #include "../Solvers.d/ConstData.h"
+#include "../Solvers.d/Damping.h"
+#include "../Solvers.d/Solver.h"
+#include "../Timers.d/MatrixTimers.h"
+#include "../Utils.d/OutputInfo.h"
+#include "../Utils.d/Solverinfo.h"
+#include "../Utils.d/curve.h"
+#include "../Utils.d/resize_array.h"
 
 //#include "../Registration.d/getid.h"
 
-
-//fenqupolie
-class FenQu{
-public:
-	int key[2];
-	double ftime[2];
-	double oktime[2];
-	int step;
-	int rstep;
-	int rkey[2];
-	FenQu(){
-
-	}
+// fenqupolie
+class FenQu {
+ public:
+  int key[2];
+  double ftime[2];
+  double oktime[2];
+  int step;
+  int rstep;
+  int rkey[2];
+  FenQu() {}
 };
 // Boundary Condition Structure
 /*
@@ -52,299 +49,320 @@ double q2;
 };
 */
 class BCond {
-public:
-	int    nnum;   // node number
-	int    dofnum; // dof number
-	int    curvenum; //dof curve
-	double val;    // value of bc
+ public:
+  int nnum;      // node number
+  int dofnum;    // dof number
+  int curvenum;  // dof curve
+  double val;    // value of bc
 };
 
-class BCFixed{
-public:
-	int nnum;
-	int fix[3];
+class BCFixed {
+ public:
+  int nnum;
+  int fix[3];
 };
 
-class Bulk_Vis{
-public:
-	int bvflg;
-	double q1;
-	double q2;
+class Bulk_Vis {
+ public:
+  int bvflg;
+  double q1;
+  double q2;
 };
 
-class INISTRESS{
-public:
-	int nele;
-	double istress[6];
+class INISTRESS {
+ public:
+  int nele;
+  double istress[6];
 };
 
-class attribute{
-public:
-	int elemnum;
-	int matnum;
+class attribute {
+ public:
+  int elemnum;
+  int matnum;
 };
 
-class fileinfo{
-public:
-	char infpath[256];
-	char refpath[256];
-	char *outputname;
-	fileinfo(){outputname = NULL;}
+class fileinfo {
+ public:
+  char infpath[256];
+  char refpath[256];
+  char *outputname;
+  fileinfo() { outputname = NULL; }
 };
 
-class versionctrl{
-public:
-	char *version;
-	char *statversion;
-	char *dataversion;
+class versionctrl {
+ public:
+  char *version;
+  char *statversion;
+  char *dataversion;
 };
-
-
 
 class Domain {
-protected:
+ protected:
+  // The following Domain class data members are needed for all types
+  // problems as well as all types of elements.
+  FenQu *fq;
+  // debug
+  int debugflg;
+  int restartflg;
+  int numnodes;     // number of nodes
+  CoordSet &nodes;  // All the nodes
 
-	// The following Domain class data members are needed for all types
-	// problems as well as all types of elements.
-	FenQu *fq;
-	//debug
-	int debugflg;
-	int restartflg;
-	int numnodes;	    // number of nodes
-	CoordSet &nodes;    // All the nodes
+  int numele;     // number of elements
+  Elemset &eset;  // set of elements
 
-	int numele;		    // number of elements
-	Elemset &eset;      // set of elements
+  int exactNumEle;
+  Elemset packedEset;  // set of compressed elements
+  int exactNumNode;
+  CoordSet packedNodes;
 
-	int exactNumEle;
-	Elemset packedEset;	 // set of compressed elements
-	int exactNumNode;
-	CoordSet packedNodes;
+  int nummat;    // number of materials
+  Matset &mset;  // set of material
 
-	int nummat;      //number of materials
-	Matset &mset;    //set of material
+  int numcu;
+  Curveset &cset;
 
-	int numcu;
-	Curveset &cset;
+  int numpart;
+  Partset &pset;
 
-	int numpart;
-	Partset &pset;
+  int numfixed;
+  BCFixed *nfixed;
 
+  int numDirichlet;
+  BCond *dbc;
 
-	int numfixed;
-	BCFixed* nfixed;
+  int numNeuman;
+  BCond *nbc;
 
-	int numDirichlet;
-	BCond* dbc;
+  int numIVel;  // number of initial velocities
+  BCond *iVel;  // set of those initial velocities
 
-	int numNeuman;
-	BCond* nbc;
+  int numIAcc;
+  BCond *iAcc;
 
-	int numIVel;		 // number of initial velocities
-	BCond *iVel;		 // set of those initial velocities
+  int numist;                     // number of inital stress
+  ResizeArray<INISTRESS> inistr;  // set of those properties
 
-	int numIAcc;
-	BCond *iAcc;
+  int numpress;
+  ResizeArray<BPress> pres;
 
-	int numist;	            // number of inital stress
-	ResizeArray<INISTRESS>  inistr;// set of those properties
+  DynOps dynops;
 
-	int numpress;
-	ResizeArray<BPress> pres;
+  MatrixTimers mm;
 
-	DynOps dynops;
+  SolverInfo sinfo;
+  Solver solv;
 
-	MatrixTimers mm;
+  int numatt;
+  ResizeArray<attribute> attrib;
+  int numpatt;
+  ResizeArray<attribute> pattrib;
 
-	SolverInfo sinfo;
-	Solver solv;
+  damping damp;
+  StaticSolver sts;
 
+  int numnout;
+  int *nout;
 
-	int numatt;
-	ResizeArray<attribute> attrib;
-	int numpatt;
-	ResizeArray<attribute> pattrib;
+  int numeout;
+  int *eout;
 
-	damping damp;
-	StaticSolver sts;
+  OutPutInterval ointer;
+  OutPutInterval hisointer;
 
-	int numnout;
-	int* nout;
+  int hisnodenum;
+  int *hisnout;
 
-	int numeout;
-	int* eout;
+  int hiselemnum;
+  int *hiseout;
 
+  OutPutInterval statinter;
 
-	OutPutInterval ointer;
-	OutPutInterval hisointer;
+  fileinfo finfo;
 
-	int hisnodenum;
-	int* hisnout;
+  versionctrl ver;
 
-	int hiselemnum;
-	int* hiseout;
+  double gravity[3];
+  int jaumannflg;
+  int hourglassflg;
+  double hourglasspara;
+  int numhis;
 
-	OutPutInterval statinter;
+  Bulk_Vis *bv;
+  int cleandvaflg;
+  int exportflacflg;
+  //     double *gravityAcceleration;   // (gx,gy,gz)
 
-	fileinfo finfo;
+  Domain(Domain &, int nele, int *ele, int nnodes, int *nodes);
 
-	versionctrl ver;
+ public:
+  Domain();
 
-	double gravity[3];
-	int jaumannflg;
-	int hourglassflg;
-	double hourglasspara;
-	int numhis;
+  // Functions to support the parsing:
+  int setdebug() {
+    debugflg = 1;
+    return debugflg;
+  }
+  int setexportflacflg() {
+    exportflacflg = 1;
+    return exportflacflg;
+  }
+  int setrestartflg() {
+    restartflg = 1;
+    return restartflg;
+  }
+  int addNode(int nd, double xyz[3]);
+  int addElem(int en, int type, int nn, int *nodes);
+  int addMat(int n, int mtype, int nprops, double *props);
+  int addPart(int n, int ptype, Part *p);
+  int addPart(int n, int ptype, int num, int *p);
+  int setDirichlet(int, BCond *);
+  int setNeuman(int, BCond *);
+  int setfix(int, BCFixed *);
+  int setIVel(int, BCond *);
+  int setIAcc(int, BCond *);
+  int setinistress(int, double *);
+  int setpress(BPress &);
+  void setlarge();
+  void setgrav(double, double, double);
+  void setatt(int, int);
+  void setpatt(int, int);
 
-	Bulk_Vis *bv;
-	int cleandvaflg;
-	int exportflacflg;
-	//     double *gravityAcceleration;   // (gx,gy,gz)
+  int addCurve(int, int, CurveCoef *);
+  int addCurve(int, int, double *);
+  int SetCurrentTime(double);
+  int setendtime(double endt) {
+    sinfo.tmax = endt;
+    return 0;
+  }
+  int settimestep(int, double);
+  int settimestep(int);
+  int calctimestep();
+  int sethourglass(int hgflg) {
+    hourglassflg = hgflg;
+    hourglasspara = 0.0;
+    return 0;
+  }
+  int sethourglass(int hgflg, double qhg) {
+    hourglassflg = hgflg;
+    hourglasspara = qhg;
+    return 0;
+  }
+  MatrixTimers &getTimers() { return mm; }
+  SolverInfo &solinfo() { return sinfo; }
+  int probType() { return sinfo.probType; }
+  int inisolver(SolverInfo &);
 
-	Domain(Domain &, int nele, int *ele, int nnodes, int *nodes);
+  int setdamping(int, double);
 
-public:
-	Domain();
+  int staticterm();
+  int staticterm(double);
 
-	// Functions to support the parsing:
-	int setdebug(){debugflg = 1;  return debugflg;    }
-	int setexportflacflg(){exportflacflg = 1;  return exportflacflg;   }
-	int setrestartflg(){restartflg = 1; return restartflg;    }
-	int  addNode(int nd, double xyz[3]);
-	int  addElem(int en, int type, int nn, int *nodes);
-	int  addMat(int n, int mtype, int nprops, double *props);
-	int  addPart(int n, int ptype, Part *p);
-	int  addPart(int n, int ptype, int num, int *p);
-	int  setDirichlet(int,BCond *);
-	int  setNeuman(int,BCond *);
-	int  setfix(int, BCFixed*);
-	int  setIVel(int, BCond *);
-	int  setIAcc(int, BCond *);
-	int  setinistress(int, double*);
-	int  setpress(BPress&);
-	void setlarge();
-	void setgrav(double, double, double);
-	void setatt(int, int);
-	void setpatt(int,int);
+  void setUpData();
+  void preProcess();
+  void solve();
+  void setointer(int _otype, double _tinterval) {
+    ointer.outfiletype = _otype;
+    ointer.ninterval = 0;
+    ointer.tinterval = _tinterval;
+    ointer.ncount = 0;
+    ointer.tcount = 0.0;
+  }
+  void setointer(int _otype, int _ninterval) {
+    ointer.outfiletype = _otype;
+    ointer.ninterval = _ninterval;
+    ointer.tinterval = 0.0;
+    ointer.ncount = 0;
+    ointer.tcount = 0.0;
+  }
+  void sethisointer(double _histinterval) {
+    hisointer.ninterval = 0;
+    hisointer.tinterval = _histinterval;
+    hisointer.ncount = 0;
+    hisointer.tcount = 0.0;
+  }
 
-	int  addCurve(int, int , CurveCoef*);
-	int  addCurve(int, int , double*);
-	int  SetCurrentTime(double);
-	int  setendtime(double endt){ sinfo.tmax = endt;return 0;  }
-	int  settimestep(int, double);
-	int  settimestep(int);
-	int  calctimestep();
-	int sethourglass(int hgflg){hourglassflg = hgflg;hourglasspara = 0.0; return 0;}
-	int sethourglass(int hgflg, double qhg){
-		hourglassflg = hgflg;
-		hourglasspara = qhg; return 0;
-	}
-	MatrixTimers &getTimers()    { return mm; }
-	SolverInfo   &solinfo() {return sinfo;     }
-	int  probType() { return sinfo.probType; }
-	int inisolver(SolverInfo&);
+  void setsinter(double _tinterval) {
+    statinter.ninterval = 0;
+    statinter.tinterval = _tinterval;
+    statinter.ncount = 0;
+    statinter.tcount = 0.0;
+  }
+  void setsinter(int _ninterval) {
+    statinter.ninterval = _ninterval;
+    statinter.tinterval = 0.0;
+    statinter.ncount = 0;
+    statinter.tcount = 0.0;
+  }
 
-	int setdamping(int, double);
+  void setinfilepath(char *);
+  void setrefilepath(char *);
 
-	int staticterm();
-	int staticterm(double);
+  void addnout(int);
+  void addeout(int);
+  int TECPLOT_VNN(int &, char *);
+  int TECPLOT_VL(int *);
 
-	void setUpData();
-	void preProcess();
-	void solve();
-	void setointer(int _otype,double _tinterval){ointer.outfiletype = _otype;ointer.ninterval = 0; ointer.tinterval = _tinterval;
-	ointer.ncount = 0; ointer.tcount = 0.0;}
-	void setointer(int _otype,int _ninterval){ointer.outfiletype = _otype;ointer.ninterval = _ninterval; ointer.tinterval = 0.0;
-	ointer.ncount = 0; ointer.tcount = 0.0;}
-	void sethisointer(double _histinterval){ hisointer.ninterval = 0; hisointer.tinterval = _histinterval;
-	hisointer.ncount = 0; hisointer.tcount = 0.0;
-	}
+  int setoutfile(char *);
+  void addhisnode(int);
+  void addhiselem(int);
+  void dynaplotoutput(int, double);
+  void sethisdata(int his) { numhis = his; }
+  void dynahisoutput();
+  int dynastatoutput(int, double);
+  int dynatecpoutput(int, double, int *, int *, int *);
 
-	void setsinter(double _tinterval){statinter.ninterval = 0; statinter.tinterval = _tinterval;
-	statinter.ncount = 0; statinter.tcount = 0.0;}
-	void setsinter(int _ninterval){statinter.ninterval = _ninterval; statinter.tinterval = 0.0;
-	statinter.ncount = 0; statinter.tcount = 0.0;}
+  void iniversion() {
+    ver.version = "V1.00";
+    ver.statversion = "V1.00";
+    ver.dataversion = "V1.00";
+  }
+  // restart set part
+  int ResetSolver(int, double *);
+  int ReadCDerflg(int *);
+  int ResetNData(double *, int *, int);
+  int ResetEData(double *, int, int);
 
-	void setinfilepath(char*);
-	void setrefilepath(char*);
-
-	void addnout(int);
-	void addeout(int);
-	int TECPLOT_VNN(int&, char*);
-	int TECPLOT_VL(int*);
-
-	int setoutfile(char*);
-	void addhisnode(int);
-	void addhiselem(int);
-	void dynaplotoutput(int,double);
-	void sethisdata(int his){numhis = his; }
-	void dynahisoutput();
-	int  dynastatoutput(int, double);
-	int  dynatecpoutput(int,double, int*,int*,int*);
-
-	void iniversion(){
-		ver.version = "V1.00";
-		ver.statversion = "V1.00";
-		ver.dataversion = "V1.00";
-	}
-	//restart set part
-	int ResetSolver(int, double*);
-	int ReadCDerflg(int*);
-	int ResetNData(double*, int*, int);
-	int ResetEData(double*, int, int);
-
-	int delelem(int);
-	int delpart(int);
-	int initmass();
-	int userdel();
-	int setbulkvisco(double, double);
-	int cleardv();
-	int exportflac();
-	int packelemdelete();
-	int packelemall();
-	double calcfm();
-	int fenqupolie();
-	int setfenqu(double,double,double, double);
+  int delelem(int);
+  int delpart(int);
+  int initmass();
+  int userdel();
+  int setbulkvisco(double, double);
+  int cleardv();
+  int exportflac();
+  int packelemdelete();
+  int packelemall();
+  double calcfm();
+  int fenqupolie();
+  int setfenqu(double, double, double, double);
 };
 
-inline int
-Domain::addElem(int en, int type, int nn, int *nodes)
-{
-	eset.elemadd(en, type, nn, nodes);
-	return 0;
+inline int Domain::addElem(int en, int type, int nn, int *nodes) {
+  eset.elemadd(en, type, nn, nodes);
+  return 0;
 }
 
-inline int
-Domain::addMat(int n, int mtype, int nprops, double *props)
-{
-	mset.propadd(n, mtype, nprops, props);
-	return 0;
+inline int Domain::addMat(int n, int mtype, int nprops, double *props) {
+  mset.propadd(n, mtype, nprops, props);
+  return 0;
 }
 
-inline int
-Domain::addCurve(int n,int l, CurveCoef *nv)
-{
-	cset.curveadd(n,l,nv);
-	return 0;
+inline int Domain::addCurve(int n, int l, CurveCoef *nv) {
+  cset.curveadd(n, l, nv);
+  return 0;
 }
 
-inline int
-Domain::addCurve(int n,int l, double *nv)
-{
-	cset.curveadd(n,l,nv);
-	return 0;
+inline int Domain::addCurve(int n, int l, double *nv) {
+  cset.curveadd(n, l, nv);
+  return 0;
 }
 
-
-inline int
-Domain::addPart(int n, int type, Part *p){
-	pset.partadd(n, type, p);
-	return 0;
+inline int Domain::addPart(int n, int type, Part *p) {
+  pset.partadd(n, type, p);
+  return 0;
 }
 
-inline int
-Domain::addPart(int n, int ptype, int num, int *p){
-	pset.partadd(n,ptype,num,p);
-	return 0;
+inline int Domain::addPart(int n, int ptype, int num, int *p) {
+  pset.partadd(n, ptype, num, p);
+  return 0;
 }
 #endif

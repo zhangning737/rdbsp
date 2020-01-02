@@ -3,12 +3,4 @@
 
 #include "../Element.d/Element.h"
 
-
-int
-Element::getDimNumber()
-{
- return -1;
-}
-
-
-
+int Element::getDimNumber() { return -1; }

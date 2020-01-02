@@ -4,4 +4,3 @@
 int jaco_(double*, double*, double*);
 
 #endif
-    
