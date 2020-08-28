@@ -11,7 +11,7 @@ CFLAGS = $(CXXFLAGS)
 $(LIBDIR)libparser.a: $(OBJS)
 
 y.tab.c: p.y
-	bison.yacc -d -v p.y
+	yacc -d -v p.y
 
 lex.yy.c: lexer.l $(LIB)(y.tab.o)
 	flex -i lexer.l
