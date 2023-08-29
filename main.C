@@ -29,7 +29,7 @@ extern int optind;
 fprintf(stderr,"..........................................................................\n");
 fprintf(stderr,"..........................................................................\n");
 fprintf(stderr,"..........................................................................\n");
-fprintf(stderr,"...     Writen By Zhang Ning Email: zhangning@njust.edu.cn             ...\n");
+fprintf(stderr,"...     Writen By Zhang Ning Email: zhangning@njtech.edu.cn             ...\n");
 fprintf(stderr,"..........................................................................\n");
 fprintf(stderr,"..........................................................................\n");
 fprintf(stderr,"..........................................................................\n");
@@ -53,8 +53,8 @@ fprintf(stderr,"................................................................
  char *resfile = NULL;
  char *outfile = NULL;
  
- fprintf(stderr,"\nRunning Finite Element Computation Programme\n");
- fprintf(stderr,"Writen by Zhang Ning @NJUST\n");
+ fprintf(stderr,"\nRunning Finite Element Computation Program\n");
+ fprintf(stderr,"Writen by Zhang Ning @NJTECH\n");
  while ((c = getopt(argc, argv, "r:i:o:")) != EOF)
       switch (c) {
       case 'i':
