@@ -2,8 +2,10 @@ RANLIB = echo
 
 MAKE   = make
 
-CXX = icpc
+CXX = icpx
 FC  = ifort
 
+MKLPATH=$MKLROOT/lib
+MKLINCLUDE=$MKLROOT/include
 FFLAGS = -lifcore -limf  -qmkl -f77rtl -names lowercase -assume nounderscore 
-CXXFLAGS= -L/opt/intel/lib/intel64 -lifcore -limf  -mkl 
+CXXFLAGS= -I$MKLINCLUDE -L$MKLPATH -lmkl_intel_lp64 -lmkl_tbb_thread -lmkl_core -lstdc++ -lpthread -lm

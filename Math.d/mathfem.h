@@ -296,7 +296,7 @@ double brent(double ax, double bx, double cx, const T &f, double tol,
   }
 
   // too many iterations
-  OOFEM_WARNING("brent : too many iterations\n");
+  //WARNING("brent : too many iterations\n");
   xmin = x;
   return fx;
 }
