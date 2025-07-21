@@ -3,7 +3,7 @@ RANLIB = echo
 MAKE   = make
 
 CXX = icpx
-FC  = ifort
+FC  = ifx
 
 MKLPATH=$MKLROOT/lib
 MKLINCLUDE=$MKLROOT/include
