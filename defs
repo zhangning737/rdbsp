@@ -7,5 +7,5 @@ FC  = ifx
 
 MKLPATH=$MKLROOT/lib
 MKLINCLUDE=$MKLROOT/include
-FFLAGS = -lifcore -limf  -qmkl -f77rtl -names lowercase -assume nounderscore 
-CXXFLAGS= -I$MKLINCLUDE -L$MKLPATH -lmkl_intel_lp64 -lmkl_tbb_thread -lmkl_core -lstdc++ -lpthread -lm
+FFLAGS = -d -lifcore -limf  -qmkl -f77rtl -names lowercase -assume nounderscore 
+CXXFLAGS= -d -I$MKLINCLUDE -L$MKLPATH -lmkl_intel_lp64 -lmkl_tbb_thread -lmkl_core -lstdc++ -lpthread -lm
